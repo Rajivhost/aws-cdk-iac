@@ -39,5 +39,6 @@ type AppStack(scope, id, props: StackProps, isProd: bool) as this =
                  ReadCapacity = stackParams.DynamoDbReadWrite,
                  PartitionKey = new Attribute(Name = "PK", Type = AttributeType.STRING),
                  SortKey = new Attribute(Name = "SK", Type = AttributeType.STRING),
+                 Stream = StreamViewType.NEW_IMAGE,
                  BillingMode = BillingMode.PROVISIONED)
         Table(this, "customers", tableProps)
