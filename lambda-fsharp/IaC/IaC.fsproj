@@ -10,7 +10,10 @@
   <ItemGroup>
     <Compile Include="AppStack.fs" />
     <Compile Include="Program.fs" />
+    <Content Include="..\..\cdk.json" Link="cdk.json" />
   </ItemGroup>
+
+  <ItemGroup />
 
   <ItemGroup>
     <!-- CDK Construct Library dependencies -->

@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30711.63
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D144EC2B-707A-4078-B61A-F5E3F2558573}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "IaC", "IaC\IaC.fsproj", "{AF8E491F-C635-4702-9D0E-FB425C16E378}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "LambdaCdk", "LambdaCdk\LambdaCdk.fsproj", "{65917A67-B11C-45DD-B511-E9247E65AE27}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AF8E491F-C635-4702-9D0E-FB425C16E378}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF8E491F-C635-4702-9D0E-FB425C16E378}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF8E491F-C635-4702-9D0E-FB425C16E378}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF8E491F-C635-4702-9D0E-FB425C16E378}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65917A67-B11C-45DD-B511-E9247E65AE27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65917A67-B11C-45DD-B511-E9247E65AE27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65917A67-B11C-45DD-B511-E9247E65AE27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65917A67-B11C-45DD-B511-E9247E65AE27}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AF8E491F-C635-4702-9D0E-FB425C16E378} = {D144EC2B-707A-4078-B61A-F5E3F2558573}
+		{65917A67-B11C-45DD-B511-E9247E65AE27} = {D144EC2B-707A-4078-B61A-F5E3F2558573}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D77CDEDC-E1CF-4390-9BFA-3E69E0D1CE54}
+	EndGlobalSection
+EndGlobal

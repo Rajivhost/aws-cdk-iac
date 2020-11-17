@@ -1,5 +1,5 @@
 {
-  "app": "dotnet run -p src/Aa/Aa.fsproj",
+  "app": "dotnet run -p lambda-fsharp/IaC/IaC.fsproj",
   "context": {
     "@aws-cdk/core:enableStackNameDuplicates": "true",
     "aws-cdk:enableDiffNoFail": "true",
