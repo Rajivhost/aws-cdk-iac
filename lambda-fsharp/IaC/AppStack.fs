@@ -37,6 +37,7 @@ type AppStack(scope, id, props: StackProps, isProd: bool) as this =
             TableProps
                 (TableName = stackParams.TableName,
                  ReadCapacity = stackParams.DynamoDbReadWrite,
-                 PartitionKey = new Attribute(Type = AttributeType.STRING, Name = "PK"),
+                 PartitionKey = new Attribute(Name = "PK", Type = AttributeType.STRING),
+                 SortKey = new Attribute(Name = "SK", Type = AttributeType.STRING),
                  BillingMode = BillingMode.PROVISIONED)
         Table(this, "customers", tableProps)
