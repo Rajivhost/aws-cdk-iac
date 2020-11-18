@@ -5,10 +5,12 @@ open App
 let main _ =
     let app = App(null)
 
-    AppStack(app, "cdk-customers-prod", StackProps(Env = new Environment(Region = "eu-west-2")), true)
+    let env = Environment(Region = "eu-west-2")
+
+    AppStack(app, "cdk-customers-prod", StackProps(Env = env), true)
     |> ignore
 
-    AppStack(app, "cdk-customers-staging", StackProps(Env = new Environment(Region = "eu-west-2")), false)
+    AppStack(app, "cdk-customers-staging", StackProps(Env = env), false)
     |> ignore
 
     //AppStack

@@ -55,18 +55,21 @@ type AppStack(scope, id, props: StackProps, isProd: bool) as this =
             FunctionProps
                 (FunctionName = "cdk-customers-service",
                  Runtime = Runtime.DOTNET_CORE_3_1,
-                 Code = Code.FromAsset("../LambdaCdk/bin/Release/netcoreapp3.1/publish"),
+                 Code = Code.FromAsset("lambda-fsharp/LambdaCdk/bin/Release/netcoreapp3.1/publish"),
                  Handler = "LambdaCdk::Setup+LambdaEntryPoint::FunctionHandlerAsync",
                  Timeout = Duration.Seconds(31.),
                  MemorySize = 512.)
 
-        Function(this, "Cdk-Customers-Service", functionProps)
+        Function(this, "Cdk-Customers-Service", functionProps).AddEnvironment("TABLE_NAME", table.TableName)
+
+
 
     // --- api gateway ---
     let api = RestApi(this, stackParams.ApiGatewayName)
 
     // --- api gw integration ---
     let apiLambdaInteg = LambdaIntegration(lambdaFunction)
+    let _ = api.Root.AddMethod("ANY", apiLambdaInteg)
 
     // --- table permissions ---
-    let t = table.GrantReadWriteData(lambdaFunction)
+    let _ = table.GrantReadWriteData(lambdaFunction)
