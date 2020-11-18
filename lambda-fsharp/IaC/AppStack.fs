@@ -47,11 +47,11 @@ type AppStack(scope, id, props: StackProps, isProd: bool) as this =
                  Stream =
                      (StreamViewType.NEW_IMAGE
                       |> Nullable<StreamViewType>),
-                 RemovalPolicy =
-                     ((match isProd with
-                       | true -> RemovalPolicy.SNAPSHOT
-                       | false -> RemovalPolicy.DESTROY)
-                      |> Nullable<RemovalPolicy>),
+                 RemovalPolicy = (RemovalPolicy.DESTROY |> Nullable<RemovalPolicy>),
+                     //((match isProd with
+                     //  | true -> RemovalPolicy.SNAPSHOT
+                     //  | false -> RemovalPolicy.DESTROY)
+                     // |> Nullable<RemovalPolicy>),
                  BillingMode = (BillingMode.PROVISIONED |> Nullable<BillingMode>))
 
         Table(this, "customers", tableProps)
