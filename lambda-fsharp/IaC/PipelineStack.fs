@@ -1,5 +1,6 @@
 namespace Pipeline
 
+open System
 open Amazon.CDK
 open Amazon.CDK.Pipelines
 open Amazon.CDK.AWS.CodeBuild
@@ -25,14 +26,16 @@ type PipelineStack(scope, id, props: StackProps) as this =
                  Branch = "master",
                  Owner = "Rajivhost",
                  Repo = "aws-cdk-iac",
-                 Trigger = GitHubTrigger.POLL))
+                 Trigger = (GitHubTrigger.POLL |> Nullable<GitHubTrigger>)))
 
     let synthAction =
         SimpleSynthAction
             (SimpleSynthActionProps
                 (SourceArtifact = sourceArtefact,
                  CloudAssemblyArtifact = cloudAssemblyArtifact,
-                 Environment = BuildEnvironment((*BuildImage = LinuxBuildImage.STANDARD_2_0,*) Privileged = true),
+                 Environment =
+                     BuildEnvironment
+                         ( (*BuildImage = LinuxBuildImage.STANDARD_2_0,*) Privileged = (true |> Nullable<bool>)),
                  InstallCommands =
                      [| "npm install -g aws-cdk"
                         "wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb"

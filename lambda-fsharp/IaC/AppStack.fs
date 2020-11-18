@@ -1,10 +1,12 @@
 namespace App
 
+open System
 open Amazon.CDK
 open Amazon.CDK.AWS.Lambda
 open Amazon.CDK.AWS.DynamoDB
 open Amazon.CDK.AWS.APIGateway
 open Amazon.CDK.AWS.IAM
+
 
 type EnvStackProps =
     inherit IStackProps
@@ -41,12 +43,18 @@ type AppStack(scope, id, props: StackProps, isProd: bool) as this =
         let tableProps =
             TableProps
                 (TableName = stackParams.TableName,
-                 ReadCapacity = stackParams.DynamoDbReadWrite,
-                 PartitionKey = new Attribute(Name = "PK", Type = AttributeType.STRING),
-                 SortKey = new Attribute(Name = "SK", Type = AttributeType.STRING),
-                 Stream = StreamViewType.NEW_IMAGE,
-                 RemovalPolicy = RemovalPolicy.DESTROY,
-                 BillingMode = BillingMode.PROVISIONED)
+                 ReadCapacity = (stackParams.DynamoDbReadWrite |> Nullable<float>),
+                 PartitionKey = Amazon.CDK.AWS.DynamoDB.Attribute(Name = "PK", Type = AttributeType.STRING),
+                 SortKey = Amazon.CDK.AWS.DynamoDB.Attribute(Name = "SK", Type = AttributeType.STRING),
+                 Stream =
+                     (StreamViewType.NEW_IMAGE
+                      |> Nullable<StreamViewType>),
+                 RemovalPolicy =
+                     ((match isProd with
+                       | true -> RemovalPolicy.SNAPSHOT
+                       | false -> RemovalPolicy.DESTROY)
+                      |> Nullable<RemovalPolicy>),
+                 BillingMode = (BillingMode.PROVISIONED |> Nullable<BillingMode>))
 
         Table(this, "customers", tableProps)
 
@@ -64,7 +72,7 @@ type AppStack(scope, id, props: StackProps, isProd: bool) as this =
                  Code = Code.FromAsset("lambda-fsharp/LambdaCdk/bin/Release/netcoreapp3.1/publish"),
                  Handler = "LambdaCdk::Setup+LambdaEntryPoint::FunctionHandlerAsync",
                  Timeout = Duration.Seconds(30.),
-                 MemorySize = 512.)
+                 MemorySize = (512. |> Nullable<float>))
 
         Function(this, "Cdk-Customers-Service", functionProps)
             .AddEnvironment("TABLE_NAME", table.TableName)
