@@ -1,5 +1,4 @@
 open App
-open Pipeline
 open Amazon.CDK
 
 [<EntryPoint>]
@@ -8,11 +7,11 @@ let main _ =
 
     let env = Environment(Region = "eu-west-2")
 
-    AppStack(app, "cdk-customers-prod", StackProps(Env = env), true)
-    |> ignore
+    //AppStack(app, "cdk-customers-prod", StackProps(Env = env), true)
+    //|> ignore
 
-    AppStack(app, "cdk-customers-staging", StackProps(Env = env), false)
-    |> ignore
+    //AppStack(app, "cdk-customers-staging", StackProps(Env = env), false)
+    //|> ignore
 
     PipelineStack(app, "cdk-customers-pipeline", StackProps(Env = env))
     |> ignore

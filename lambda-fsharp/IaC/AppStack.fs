@@ -5,12 +5,10 @@ open Amazon.CDK
 open Amazon.CDK.AWS.Lambda
 open Amazon.CDK.AWS.DynamoDB
 open Amazon.CDK.AWS.APIGateway
-open Amazon.CDK.AWS.IAM
 
-
-type EnvStackProps =
-    inherit IStackProps
-    abstract Production: bool
+//type EnvStackProps =
+//    inherit IStackProps
+//    abstract Production: bool
 
 //type AppStack(scope, id, props: EnvStackProps) as this =
 type AppStack(scope, id, props: StackProps, isProd: bool) as this =
@@ -82,7 +80,7 @@ type AppStack(scope, id, props: StackProps, isProd: bool) as this =
     // --- api gateway ---
     let api =
         let api =
-            RestApi(this, stackParams.ApiGatewayName)
+            RestApi(this, stackParams.ApiGatewayName, RestApiProps(Description = "Endpoint for a simple Lambda-powered web service"))
 
         let deployment =
             Deployment(this, "cdk-customers-deployment", DeploymentProps(Api = api))
@@ -108,7 +106,10 @@ type AppStack(scope, id, props: StackProps, isProd: bool) as this =
     let apiLambdaInteg = LambdaIntegration(lambdaFunction)
 
     let _ =
-        api.Root.AddMethod("ANY", apiLambdaInteg)
+        api.Root.AddMethod("ANY", apiLambdaInteg) |> ignore
 
-    // --- table permissions ---
-    let _ = table.GrantReadWriteData(lambdaFunction)
+        // --- table permissions ---
+        table.GrantReadWriteData(lambdaFunction) |> ignore
+
+    member _.ApiGatewayUrl : CfnOutput = CfnOutput(this, "ApiGatewayUrl", CfnOutputProps(Value = api.Url))
+    member _.TableName : CfnOutput = CfnOutput(this, "TableName", CfnOutputProps(Value = table.TableName))

@@ -1,4 +1,4 @@
-namespace Pipeline
+namespace App
 
 open System
 open Amazon.CDK
@@ -54,4 +54,10 @@ type PipelineStack(scope, id, props: StackProps) as this =
              SynthAction = synthAction)
 
     let pipeline =
-        CdkPipeline(this, "Pipeline", cdkPipelineProps)
+        let pipeline = CdkPipeline(this, "Pipeline", cdkPipelineProps)
+
+        let appStage = AppStage(this, "Deploy", Amazon.CDK.StageProps(Env = props.Env)) |> pipeline.AddApplicationStage
+
+        appStage.AddManualApprovalAction(AddManualApprovalOptions(ActionName = "Valider", RunOrder = (1. |> Nullable<float>)))
+
+        pipeline
