@@ -42,7 +42,7 @@ type PipelineStack(scope, id, props: StackProps) as this =
                         "dpkg -i packages-microsoft-prod.deb"
                         "apt-get update"
                         "apt-get install -y apt-transport-https && apt-get update && apt-get install -y dotnet-sdk-5.0" |],
-                 BuildCommands = [| "dotnet publish lambda-fsharp/LambdaCdk/LambdaCdk.fsproj --framework netcoreapp3.1" |],
+                 BuildCommands = [| "dotnet publish lambda-fsharp/LambdaCdk/LambdaCdk.fsproj --framework netcoreapp3.1 -c Release" |],
                  SynthCommand = "cdk synth"))
 
 
