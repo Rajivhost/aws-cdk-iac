@@ -4,6 +4,7 @@ open Amazon.CDK
 open Amazon.CDK.AWS.Lambda
 open Amazon.CDK.AWS.DynamoDB
 open Amazon.CDK.AWS.APIGateway
+open Amazon.CDK.AWS.IAM
 
 type EnvStackProps =
     inherit IStackProps
@@ -52,20 +53,35 @@ type AppStack(scope, id, props: StackProps, isProd: bool) as this =
     // --- lambda ---
     let lambdaFunction =
         let functionProps =
+            let functionName = match isProd with true -> "cdk-customers-service-prod" | false -> "cdk-customers-service-staging"
+
             FunctionProps
-                (FunctionName = "cdk-customers-service",
+                (FunctionName = functionName,
                  Runtime = Runtime.DOTNET_CORE_3_1,
                  Code = Code.FromAsset("lambda-fsharp/LambdaCdk/bin/Release/netcoreapp3.1/publish"),
                  Handler = "LambdaCdk::Setup+LambdaEntryPoint::FunctionHandlerAsync",
                  Timeout = Duration.Seconds(31.),
                  MemorySize = 512.)
 
-        Function(this, "Cdk-Customers-Service", functionProps).AddEnvironment("TABLE_NAME", table.TableName)
-
+        Function(this, "Cdk-Customers-Service", functionProps)
+            .AddEnvironment("TABLE_NAME", table.TableName)
+            //.GrantInvoke(ServicePrincipal("apigateway.amazonaws.com"))
 
 
     // --- api gateway ---
-    let api = RestApi(this, stackParams.ApiGatewayName)
+    let api = 
+        let api = RestApi(this, stackParams.ApiGatewayName)
+
+        let deployment = Deployment(this, "cdk-customers-deployment", DeploymentProps(Api = api))
+
+        let stageName = match isProd with true -> "production" | false -> "staging"
+        let stageProps =
+            StageProps(Deployment = deployment, StageName = stageName)
+
+        let stageName = match isProd with true -> "cdk-customers-prod-stage" | false -> "cdk-customers-staging-stage"
+        api.DeploymentStage <- Stage(this, stageName, stageProps)
+
+        api
 
     // --- api gw integration ---
     let apiLambdaInteg = LambdaIntegration(lambdaFunction)
