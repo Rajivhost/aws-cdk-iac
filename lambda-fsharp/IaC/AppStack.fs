@@ -53,39 +53,54 @@ type AppStack(scope, id, props: StackProps, isProd: bool) as this =
     // --- lambda ---
     let lambdaFunction =
         let functionProps =
-            let functionName = match isProd with true -> "cdk-customers-service-prod" | false -> "cdk-customers-service-staging"
+            let functionName =
+                match isProd with
+                | true -> "cdk-customers-service-prod"
+                | false -> "cdk-customers-service-staging"
 
             FunctionProps
                 (FunctionName = functionName,
                  Runtime = Runtime.DOTNET_CORE_3_1,
                  Code = Code.FromAsset("lambda-fsharp/LambdaCdk/bin/Release/netcoreapp3.1/publish"),
                  Handler = "LambdaCdk::Setup+LambdaEntryPoint::FunctionHandlerAsync",
-                 Timeout = Duration.Seconds(31.),
+                 Timeout = Duration.Seconds(30.),
                  MemorySize = 512.)
 
         Function(this, "Cdk-Customers-Service", functionProps)
             .AddEnvironment("TABLE_NAME", table.TableName)
-            //.GrantInvoke(ServicePrincipal("apigateway.amazonaws.com"))
+    //.GrantInvoke(ServicePrincipal("apigateway.amazonaws.com"))
 
 
     // --- api gateway ---
-    let api = 
-        let api = RestApi(this, stackParams.ApiGatewayName)
+    let api =
+        let api =
+            RestApi(this, stackParams.ApiGatewayName)
 
-        let deployment = Deployment(this, "cdk-customers-deployment", DeploymentProps(Api = api))
+        let deployment =
+            Deployment(this, "cdk-customers-deployment", DeploymentProps(Api = api))
 
-        let stageName = match isProd with true -> "production" | false -> "staging"
+        let stageName =
+            match isProd with
+            | true -> "production"
+            | false -> "staging"
+
         let stageProps =
             StageProps(Deployment = deployment, StageName = stageName)
 
-        let stageName = match isProd with true -> "cdk-customers-prod-stage" | false -> "cdk-customers-staging-stage"
+        let stageName =
+            match isProd with
+            | true -> "cdk-customers-prod-stage"
+            | false -> "cdk-customers-staging-stage"
+
         api.DeploymentStage <- Stage(this, stageName, stageProps)
 
         api
 
     // --- api gw integration ---
     let apiLambdaInteg = LambdaIntegration(lambdaFunction)
-    let _ = api.Root.AddMethod("ANY", apiLambdaInteg)
+
+    let _ =
+        api.Root.AddMethod("ANY", apiLambdaInteg)
 
     // --- table permissions ---
     let _ = table.GrantReadWriteData(lambdaFunction)
