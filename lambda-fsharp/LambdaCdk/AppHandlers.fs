@@ -9,7 +9,7 @@ open Microsoft.AspNetCore.Http
 let indexHandler =
     fun (next: HttpFunc) (ctx: HttpContext) ->
 
-        text "Serverless Giraffe Web API v2" next ctx
+        text "Serverless Giraffe Web API v2.5 en prod" next ctx
 
 let arrayExampleHandler (itemCount: int) =
     fun (next: HttpFunc) (ctx: HttpContext) ->
